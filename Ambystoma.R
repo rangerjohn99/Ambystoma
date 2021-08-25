@@ -6,6 +6,11 @@ gsub("_UTEP.*","", Ambystoma_final$specimen)
 
 library(car)
 
+# need to deal with getting a species variable
+# not sure how to deal with NA and missing values (why does sex not have NA values?)
+
 myaov <- aov(trunk~log(SVL_P)+larval+Sex+offset,data=Ambystoma_final,contrasts=list(larval=contr.sum,Sex=contr.sum,offset=contr.sum))  
 
 Anova(myaov, type=3)
+
+summary.lm(myaov)$adj.r.squared
