@@ -22,7 +22,7 @@ library(car)
 library(performance)
 library(olsrr)
 
-hist(Ambystoma_final$trunk, main="Histogram of Worm Count", xlab="Number of Worms")  
+hist(Ambystoma_final$trunk, main="Histogram of Trunk Count", xlab="Number of Trunk verts")  
 
 model <- aov(trunk~log(SVL_P)+larval+Sex+offset,data=Ambystoma_final)
 check_model(model)
