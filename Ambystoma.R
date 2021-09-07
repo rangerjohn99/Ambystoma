@@ -15,6 +15,7 @@ Ambystoma_final$Sex = droplevels(Ambystoma_final$Sex)
 str(Ambystoma_final)
 
 Ambystoma_final$species <-gsub("_UTEP.*","", Ambystoma_final$specimen) #makes species column
+Ambystoma_final$species <- as.factor(Ambystoma_final$species)
 
 
 # ANALYSES #---------------------------------
@@ -38,7 +39,7 @@ plot(is_norm, type = "qq", detrend = TRUE)
 model <- aov(trunk~log(SVL_P)+larval+Sex+offset,data=Ambystoma_final)
 check_model(model)
 
-myaov <- aov(trunk~log(SVL_P)+larval+Sex+offset,data=Ambystoma_final,contrasts=list(larval=contr.sum,Sex=contr.sum,offset=contr.sum))  
+myaov <- aov(trunk~log(SVL_P)+larval+Sex+offset+species,data=Ambystoma_final,contrasts=list(larval=contr.sum,Sex=contr.sum,offset=contr.sum))  
 
 Anova(myaov, type=3)
 
@@ -54,13 +55,13 @@ Ambystoma_final$caudosacral = factor(Ambystoma_final$caudosacral, levels = c("1"
 #Summarizing the data
   summary(Ambystoma_final)
 library(ggplot2)
-ggplot(Ambystoma_final, aes(x = trunk, y = SVL_P, fill = Sex)) +   geom_boxplot(size = .75) +   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+ggplot(Ambystoma_final, aes(x = trunk, y = SVL_P, fill = Sex)) +facet_wrap(. ~ species, ncol = 3)+   geom_dotplot(binaxis = "y",stackdir = "center") +   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
 
 # Making the models
-model_fit <- polr(trunk~log(SVL_P)+larval+Sex+offset,data=Ambystoma_final, Hess = TRUE)
+model_fit <- polr(trunk~log(SVL_P)+larval+Sex+offset+species,data=Ambystoma_final, Hess = TRUE)
 summary(model_fit)
 
-model_fit_nosex <- polr(trunk~log(SVL_P)+larval+offset,data=Ambystoma_final, Hess = TRUE)
+model_fit_nosex <- polr(trunk~log(SVL_P)+larval+offset+Sex,data=Ambystoma_final, Hess = TRUE)
 summary(model_fit_nosex)
 
 # Comparing models
