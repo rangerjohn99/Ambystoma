@@ -1,7 +1,7 @@
 ## Load in data ##
 # Read in csv file of data---------------------------------
 library(curl)
-f2 <- curl("https://raw.githubusercontent.com/rangerjohn99/Ambystoma/main/Ambystoma_final.csv")
+f2 <- curl("https://raw.githubusercontent.com/rangerjohn99/Ambystoma/main/Ambystoma_final_v2.csv")
 Ambystoma_final <- read.csv(f2, header = TRUE, sep = ",", stringsAsFactors = TRUE) # this is a matrix of each specimen  
 head(Ambystoma_final)
 
