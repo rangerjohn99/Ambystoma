@@ -81,7 +81,7 @@ summary_table
 
 Ambystoma_final$centrum_trunk <- as.factor(Ambystoma_final$centrum_trunk)
 Ambystoma_final$centrum_sacral <- as.factor(Ambystoma_final$centrum_sacral) 
-Ambystoma_final$larval <- as.factor(Ambystoma_final$larval)
+Ambystoma_final$atlas_fused <- as.factor(Ambystoma_final$atlas_fused)
 
 # 8th centrum model
 
@@ -92,3 +92,61 @@ iscentrum8_norm <- check_normality(centrum_model)
 plot(iscentrum8_norm)
 plot(iscentrum8_norm, type = "qq")
 plot(iscentrum8_norm, type = "qq", detrend = TRUE)
+
+centrum_model <- aov(centrum_trunk~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
+check_model(centrum_model)
+
+centrumaov <- aov(centrum_trunk~log(SVL_P)+larval+Sex++species,data=Ambystoma_final,contrasts=list(larval=contr.sum,Sex=contr.sum))  
+
+Anova(centrumaov, type=3)
+
+summary.lm(centrumaov)$adj.r.squared
+
+# caudosacral centrum model
+
+caudosacral_model <- lm(centrum_sacral~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
+ols_test_normality(caudosacral_model)
+plot(caudosacral_model)
+iscaudosacral_norm <- check_normality(caudosacral_model)
+plot(iscaudosacral_norm)
+plot(iscaudosacral_norm, type = "qq")
+plot(iscaudosacral_norm, type = "qq", detrend = TRUE)
+
+caudosacral_model <- aov(centrum_trunk~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
+check_model(caudosacral_model)
+
+caudosacralaov <- aov(centrum_sacral~log(SVL_P)+larval+Sex+offset+species,data=Ambystoma_final,contrasts=list(larval=contr.sum,Sex=contr.sum))  
+
+Anova(caudosacralaov, type=3)
+
+summary.lm(caudosacralaov)$adj.r.squared
+
+# atlas model
+
+atlas_model <- lm(atlas_fused~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
+ols_test_normality(atlas_model)
+plot(atlas_model)
+isatlas_norm <- check_normality(atlas_model)
+plot(isatlas_norm)
+plot(isatlas_norm, type = "qq")
+plot(isatlas_norm, type = "qq", detrend = TRUE)
+
+atlas_model <- aov(atlas_fused~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
+check_model(atlas_model)
+
+atlasaov <- aov(atlas_fused~log(SVL_P)+larval+Sex+species,data=Ambystoma_final,contrasts=list(larval=contr.sum,Sex=contr.sum))  
+
+Anova(atlasaov, type=3)
+
+summary.lm(atlasaov)$adj.r.squared
+
+# SVL_P MF ANOVA
+
+svl_model <- aov(log(SVL_P)~Sex+species,data=Ambystoma_final)
+check_model(svl_model)
+
+svlaov <- aov(log(SVL_P)~Sex+species,data=Ambystoma_final,contrasts=list(Sex=contr.sum)) 
+
+Anova(svlaov, type=3)
+
+summary.lm(svlaov)$adj.r.squared
