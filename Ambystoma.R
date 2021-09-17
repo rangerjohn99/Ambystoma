@@ -6,7 +6,8 @@ Ambystoma_final <- read.csv(f2, header = TRUE, sep = ",", stringsAsFactors = TRU
 head(Ambystoma_final)
 
 # Make variables factors---------------------------------
-Ambystoma_final$larval <- as.factor(Ambystoma_final$larval)
+Ambystoma_final$larval = factor(Ambystoma_final$larval, levels = c("Adult", "Larval"))
+levels(Ambystoma_final$larval)
 Ambystoma_final$atlas_fused <- as.factor(Ambystoma_final$atlas_fused) 
 Ambystoma_final$offset <- as.factor(Ambystoma_final$offset)
 
@@ -51,6 +52,8 @@ library(MASS)
 Ambystoma_final$trunk = factor(Ambystoma_final$trunk, levels = c("12", "13", "14", "15", "16", "17"), ordered = TRUE) 
 Ambystoma_final$caudosacral = factor(Ambystoma_final$caudosacral, levels = c("1", "2", "3"), ordered = TRUE) 
 
+
+
 #Exploratory data analysis
 #Summarizing the data
 summary(Ambystoma_final)
@@ -82,63 +85,30 @@ summary_table
 Ambystoma_final$centrum_trunk <- as.factor(Ambystoma_final$centrum_trunk)
 Ambystoma_final$centrum_sacral <- as.factor(Ambystoma_final$centrum_sacral) 
 Ambystoma_final$atlas_fused <- as.factor(Ambystoma_final$atlas_fused)
+Ambystoma_final$centrum_trunk = factor(Ambystoma_final$centrum_trunk, levels = c("Closed", "Open"))
+levels(Ambystoma_final$centrum_trunk)
+
+Ambystoma_final$centrum_sacral = factor(Ambystoma_final$centrum_sacral, levels = c("Closed", "Open"))
+levels(Ambystoma_final$centrum_sacral)
 
 # 8th centrum model
 
-centrum_model <- lm(centrum_trunk~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
-ols_test_normality(centrum_model)
-plot(centrum_model)
-iscentrum8_norm <- check_normality(centrum_model)
-plot(iscentrum8_norm)
-plot(iscentrum8_norm, type = "qq")
-plot(iscentrum8_norm, type = "qq", detrend = TRUE)
+centrum_model <- glm(centrum_trunk~log(SVL_P)+larval+Sex+species,data=Ambystoma_final, family = 'binomial')
+summary(centrum_model)
+exp(centrum_model$coefficients)
 
-centrum_model <- aov(centrum_trunk~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
-check_model(centrum_model)
 
-centrumaov <- aov(centrum_trunk~log(SVL_P)+larval+Sex++species,data=Ambystoma_final,contrasts=list(larval=contr.sum,Sex=contr.sum))  
+# sacral centrum model
 
-Anova(centrumaov, type=3)
-
-summary.lm(centrumaov)$adj.r.squared
-
-# caudosacral centrum model
-
-caudosacral_model <- lm(centrum_sacral~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
-ols_test_normality(caudosacral_model)
-plot(caudosacral_model)
-iscaudosacral_norm <- check_normality(caudosacral_model)
-plot(iscaudosacral_norm)
-plot(iscaudosacral_norm, type = "qq")
-plot(iscaudosacral_norm, type = "qq", detrend = TRUE)
-
-caudosacral_model <- aov(centrum_trunk~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
-check_model(caudosacral_model)
-
-caudosacralaov <- aov(centrum_sacral~log(SVL_P)+larval+Sex+offset+species,data=Ambystoma_final,contrasts=list(larval=contr.sum,Sex=contr.sum))  
-
-Anova(caudosacralaov, type=3)
-
-summary.lm(caudosacralaov)$adj.r.squared
+sacral_model <- glm(centrum_sacral~log(SVL_P)+larval+Sex+species,data=Ambystoma_final, family = 'binomial')
+summary(sacral_model)
+exp(sacral_model$coefficients)
 
 # atlas model
 
-atlas_model <- lm(atlas_fused~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
-ols_test_normality(atlas_model)
-plot(atlas_model)
-isatlas_norm <- check_normality(atlas_model)
-plot(isatlas_norm)
-plot(isatlas_norm, type = "qq")
-plot(isatlas_norm, type = "qq", detrend = TRUE)
-
-atlas_model <- aov(atlas_fused~log(SVL_P)+larval+Sex+species,data=Ambystoma_final)
-check_model(atlas_model)
-
-atlasaov <- aov(atlas_fused~log(SVL_P)+larval+Sex+species,data=Ambystoma_final,contrasts=list(larval=contr.sum,Sex=contr.sum))  
-
-Anova(atlasaov, type=3)
-
-summary.lm(atlasaov)$adj.r.squared
+atlas_model <- glm(atlas_fused~log(SVL_P)+larval+Sex+species,data=Ambystoma_final,family = 'binomial')
+summary(atlas_model)
+exp(atlas_model$coefficients)
 
 # SVL_P MF ANOVA
 
@@ -150,3 +120,6 @@ svlaov <- aov(log(SVL_P)~Sex+species,data=Ambystoma_final,contrasts=list(Sex=con
 Anova(svlaov, type=3)
 
 summary.lm(svlaov)$adj.r.squared
+
+# test individual species for sexual dimorphism
+# replace csv file
