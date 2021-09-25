@@ -19,7 +19,6 @@ str(Ambystoma_final)
 Ambystoma_final$species <-gsub("_UTEP.*","", Ambystoma_final$specimen) #makes species column
 Ambystoma_final$species <- as.factor(Ambystoma_final$species)
 
-
 # ANALYSES #---------------------------------
 library(car)
 library(performance)
@@ -52,8 +51,6 @@ library(MASS)
 #Ordering the dependent variable
 Ambystoma_final$trunk = factor(Ambystoma_final$trunk, levels = c("12", "13", "14", "15", "16", "17"), ordered = TRUE) 
 Ambystoma_final$caudosacral = factor(Ambystoma_final$caudosacral, levels = c("1", "2", "3"), ordered = TRUE) 
-
-
 
 #Exploratory data analysis
 #Summarizing the data
@@ -98,7 +95,6 @@ centrum_model <- glm(centrum_trunk~log(SVL_P)+larval+Sex+species,data=Ambystoma_
 summary(centrum_model)
 exp(centrum_model$coefficients)
 
-
 # sacral centrum model
 
 sacral_model <- glm(centrum_sacral~log(SVL_P)+larval+Sex+species,data=Ambystoma_final, family = 'binomial')
@@ -137,6 +133,8 @@ Anova(svlaov_maculatum, type=3)
 
 summary.lm(svlaov_maculatum)$adj.r.square
 
+boxplot(SVL_P~Sex, data=maculatum)
+
 # opacum
 
 opacum <- subset(Ambystoma_final, species == "Ambystoma_opacum", select = c("SVL_P", "Sex"))
@@ -150,6 +148,8 @@ Anova(svlaov_opacum, type=3)
 
 summary.lm(svlaov_opacum)$adj.r.square
 
+boxplot(SVL_P~Sex, data=opacum)
+
 # tigrinum
 
 tigrinum <- subset(Ambystoma_final, species == "Ambystoma_tigrinum", select = c("SVL_P", "Sex"))
@@ -162,3 +162,5 @@ svlaov_tigrinum <- aov(log(SVL_P)~Sex,data=tigrinum,contrasts=list(Sex=contr.sum
 Anova(svlaov_tigrinum, type=3)
 
 summary.lm(svlaov_tigrinum)$adj.r.square
+
+boxplot(SVL_P~Sex, data=tigrinum)
