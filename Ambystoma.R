@@ -1,3 +1,4 @@
+
 ## Load in data ##
 # Read in csv file of data---------------------------------
 library(curl)
@@ -121,5 +122,43 @@ Anova(svlaov, type=3)
 
 summary.lm(svlaov)$adj.r.squared
 
-# test individual species for sexual dimorphism
-# replace csv file
+# test individual species for sexual dimorphism (n=10)
+
+# maculatum
+
+maculatum <- subset(Ambystoma_final, species == "Ambystoma_maculatum", select = c("SVL_P", "Sex"))
+
+svl_model_maculatum <- aov(log(SVL_P)~Sex,data=maculatum)
+check_model(svl_model_maculatum)
+
+svlaov_maculatum <- aov(log(SVL_P)~Sex,data=maculatum,contrasts=list(Sex=contr.sum)) 
+
+Anova(svlaov_maculatum, type=3)
+
+summary.lm(svlaov_maculatum)$adj.r.square
+
+# opacum
+
+opacum <- subset(Ambystoma_final, species == "Ambystoma_opacum", select = c("SVL_P", "Sex"))
+
+svl_model_opacum <- aov(log(SVL_P)~Sex,data=opacum)
+check_model(svl_model_opacum)
+
+svlaov_opacum <- aov(log(SVL_P)~Sex,data=opacum,contrasts=list(Sex=contr.sum)) 
+
+Anova(svlaov_opacum, type=3)
+
+summary.lm(svlaov_opacum)$adj.r.square
+
+# tigrinum
+
+tigrinum <- subset(Ambystoma_final, species == "Ambystoma_tigrinum", select = c("SVL_P", "Sex"))
+
+svl_model_tigrinum <- aov(log(SVL_P)~Sex,data=tigrinum)
+check_model(svl_model_tigrinum)
+
+svlaov_tigrinum <- aov(log(SVL_P)~Sex,data=tigrinum,contrasts=list(Sex=contr.sum)) 
+
+Anova(svlaov_tigrinum, type=3)
+
+summary.lm(svlaov_tigrinum)$adj.r.square
