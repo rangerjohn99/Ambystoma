@@ -9,7 +9,8 @@ head(Ambystoma_final)
 # Make variables factors---------------------------------
 Ambystoma_final$larval = factor(Ambystoma_final$larval, levels = c("Adult", "Larval"))
 levels(Ambystoma_final$larval)
-Ambystoma_final$atlas_fused <- as.factor(Ambystoma_final$atlas_fused) 
+Ambystoma_final$atlas_fused <- as.factor(Ambystoma_final$atlas_fused)
+Ambystoma_final$atlas_fused <-relevel(Ambystoma_final$atlas_fused, ref = "1")
 Ambystoma_final$offset <- as.factor(Ambystoma_final$offset)
 
 Ambystoma_final$Sex[Ambystoma_final$Sex=='']=NA
@@ -83,27 +84,26 @@ summary_table
 Ambystoma_final$centrum_trunk <- as.factor(Ambystoma_final$centrum_trunk)
 Ambystoma_final$centrum_sacral <- as.factor(Ambystoma_final$centrum_sacral) 
 Ambystoma_final$atlas_fused <- as.factor(Ambystoma_final$atlas_fused)
-Ambystoma_final$centrum_trunk = factor(Ambystoma_final$centrum_trunk, levels = c("Closed", "Open"))
-levels(Ambystoma_final$centrum_trunk)
 
-Ambystoma_final$centrum_sacral = factor(Ambystoma_final$centrum_sacral, levels = c("Closed", "Open"))
-levels(Ambystoma_final$centrum_sacral)
+Ambystoma_final$centrum_trunk <-relevel(Ambystoma_final$centrum_trunk, ref = "Closed")
+Ambystoma_final$centrum_sacral <-relevel(Ambystoma_final$centrum_sacral, ref = "Closed")
+Ambystoma_final$larval <-relevel(Ambystoma_final$larval, ref = "Adult")
 
 # 8th centrum model
 
-centrum_model <- glm(centrum_trunk~log(SVL_P)+larval+Sex+species,data=Ambystoma_final, family = 'binomial')
+centrum_model <- glm(centrum_trunk~log(SVL_P)+larval+species,data=Ambystoma_final, family = 'binomial')
 summary(centrum_model)
 exp(centrum_model$coefficients)
 
 # sacral centrum model
 
-sacral_model <- glm(centrum_sacral~log(SVL_P)+larval+Sex+species,data=Ambystoma_final, family = 'binomial')
+sacral_model <- glm(centrum_sacral~log(SVL_P)+larval+species,data=Ambystoma_final, family = 'binomial')
 summary(sacral_model)
 exp(sacral_model$coefficients)
 
 # atlas model
 
-atlas_model <- glm(atlas_fused~log(SVL_P)+larval+Sex+species,data=Ambystoma_final,family = 'binomial')
+atlas_model <- glm(atlas_fused~log(SVL_P)+larval+species,data=Ambystoma_final,family = 'binomial')
 summary(atlas_model)
 exp(atlas_model$coefficients)
 
